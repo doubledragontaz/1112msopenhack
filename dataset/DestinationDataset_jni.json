@@ -1,0 +1,24 @@
+{
+	"name": "DestinationDataset_jni",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DLSgen2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "movies",
+				"folderPath": "movies",
+				"fileSystem": "southridgevideo"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
