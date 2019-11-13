@@ -21,24 +21,31 @@
 		},
 		"schema": [
 			{
+				"name": "OrderID",
 				"type": "String"
 			},
 			{
+				"name": "CustomerID",
 				"type": "String"
 			},
 			{
+				"name": "OrderDate",
 				"type": "String"
 			},
 			{
+				"name": "ShipDate",
 				"type": "String"
 			},
 			{
+				"name": "TotalCost",
 				"type": "String"
 			},
 			{
+				"name": "CreatedDate",
 				"type": "String"
 			},
 			{
+				"name": "UpdatedDate",
 				"type": "String"
 			}
 		]
