@@ -19,16 +19,27 @@
 					"name": "source3"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText1",
+						"type": "DatasetReference"
+					},
+					"name": "SaveTOdls"
+				}
+			],
 			"transformations": [
 				{
 					"name": "DerivedColumn1"
 				},
 				{
 					"name": "Join1"
+				},
+				{
+					"name": "DerivedColumn2"
 				}
 			],
-			"script": "\n\nsource(output(\n\t\tOrderDetailID as string,\n\t\tOrderID as string,\n\t\tMovieID as string,\n\t\tQuantity as integer,\n\t\tUnitCost as decimal(10,0),\n\t\tLineNumber as integer,\n\t\tCreatedDate as date,\n\t\tUpdatedDate as date\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> source2\nsource(output(\n\t\tOrderID as string,\n\t\tCustomerID as string,\n\t\tOrderDate as date,\n\t\tShipDate as string,\n\t\tTotalCost as decimal(10,0),\n\t\tCreatedDate as date,\n\t\tUpdatedDate as date\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> source3\nsource3 derive(SouceSystemID = 1) ~> DerivedColumn1\nDerivedColumn1, source2 join(source1@OrderID == source2@OrderID,\n\tjoinType:'right',\n\tbroadcast: 'none')~> Join1"
+			"script": "\n\nsource(output(\n\t\tOrderDetailID as string,\n\t\tOrderID as string,\n\t\tMovieID as string,\n\t\tQuantity as integer,\n\t\tUnitCost as decimal(10,0),\n\t\tLineNumber as integer,\n\t\tCreatedDate as date,\n\t\tUpdatedDate as date\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> source2\nsource(output(\n\t\tOrderID as string,\n\t\tCustomerID as string,\n\t\tOrderDate as date,\n\t\tShipDate as date,\n\t\tTotalCost as decimal(10,0),\n\t\tCreatedDate as date,\n\t\tUpdatedDate as date\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> source3\nsource3 derive(SouceSystemID = 1) ~> DerivedColumn1\nDerivedColumn1, source2 join(source3@OrderID == source2@OrderID,\n\tjoinType:'outer',\n\tbroadcast: 'none')~> Join1\nJoin1 derive(GlobalOrderID = uuid()) ~> DerivedColumn2\nDerivedColumn2 sink(input(\n\t\tAddressID as string,\n\t\tCustomerID as string,\n\t\tAddressLine1 as string,\n\t\tAddressLine2 as string,\n\t\tCity as string,\n\t\tState as string,\n\t\tZipCode as string,\n\t\tCreatedDate as string,\n\t\tUpdatedDate as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> SaveTOdls"
 		}
 	}
 }
