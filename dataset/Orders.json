@@ -1,5 +1,5 @@
 {
-	"name": "orders",
+	"name": "Orders",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "DLSgen2",
