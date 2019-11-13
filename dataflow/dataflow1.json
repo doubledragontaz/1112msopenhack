@@ -6,40 +6,32 @@
 			"sources": [
 				{
 					"dataset": {
+						"referenceName": "Orders",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				},
+				{
+					"dataset": {
 						"referenceName": "OrderDetails",
 						"type": "DatasetReference"
 					},
 					"name": "source2"
-				},
-				{
-					"dataset": {
-						"referenceName": "orders",
-						"type": "DatasetReference"
-					},
-					"name": "source3"
 				}
 			],
-			"sinks": [
-				{
-					"dataset": {
-						"referenceName": "DelimitedText1",
-						"type": "DatasetReference"
-					},
-					"name": "SaveTOdls"
-				}
-			],
+			"sinks": [],
 			"transformations": [
-				{
-					"name": "DerivedColumn1"
-				},
 				{
 					"name": "Join1"
 				},
 				{
-					"name": "DerivedColumn2"
+					"name": "Join2"
+				},
+				{
+					"name": "Join3"
 				}
 			],
-			"script": "\n\nsource(output(\n\t\tOrderDetailID as string,\n\t\tOrderID as string,\n\t\tMovieID as string,\n\t\tQuantity as integer,\n\t\tUnitCost as decimal(10,0),\n\t\tLineNumber as integer,\n\t\tCreatedDate as date,\n\t\tUpdatedDate as date\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> source2\nsource(output(\n\t\tOrderID as string,\n\t\tCustomerID as string,\n\t\tOrderDate as date,\n\t\tShipDate as date,\n\t\tTotalCost as decimal(10,0),\n\t\tCreatedDate as date,\n\t\tUpdatedDate as date\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> source3\nsource3 derive(SouceSystemID = 1) ~> DerivedColumn1\nDerivedColumn1, source2 join(source3@OrderID == source2@OrderID,\n\tjoinType:'outer',\n\tbroadcast: 'none')~> Join1\nJoin1 derive(GlobalOrderID = uuid()) ~> DerivedColumn2\nDerivedColumn2 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tmapColumn(\n\t\tOrderID = source3@OrderID,\n\t\tCustomerID,\n\t\tOrderDate,\n\t\tShipDate,\n\t\tTotalCost,\n\t\tCreatedDate = source3@CreatedDate,\n\t\tUpdatedDate = source3@UpdatedDate,\n\t\tSouceSystemID,\n\t\tOrderDetailID,\n\t\tOrderDetailOrderID = source2@OrderID,\n\t\tMovieID,\n\t\tQuantity,\n\t\tUnitCost,\n\t\tLineNumber,\n\t\tOrderDetailCreatedDate = source2@CreatedDate,\n\t\tOrderDetailUpdatedDate = source2@UpdatedDate,\n\t\tGlobalOrderID\n\t)) ~> SaveTOdls"
+			"script": "\n\nsource(output(\n\t\tOrderID as string,\n\t\tCustomerID as string,\n\t\tOrderDate as string,\n\t\tShipDate as string,\n\t\tTotalCost as string,\n\t\tCreatedDate as string,\n\t\tUpdatedDate as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> source1\nsource(output(\n\t\tOrderDetailID as string,\n\t\tOrderID as string,\n\t\tMovieID as string,\n\t\tQuantity as string,\n\t\tUnitCost as string,\n\t\tLineNumber as string,\n\t\tCreatedDate as string,\n\t\tUpdatedDate as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> source2\nJoin2 join(joinType:'inner',\n\tbroadcast: 'none')~> Join1\nJoin3 join(joinType:'inner',\n\tbroadcast: 'none')~> Join2\nsource1 join(joinType:'inner',\n\tbroadcast: 'none')~> Join3"
 		}
 	}
 }
