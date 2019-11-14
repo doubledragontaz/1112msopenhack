@@ -1,0 +1,18 @@
+{
+	"name": "DestinationDataset_fi4",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DLSgen2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "movies",
+				"fileSystem": "southridgevideo"
+			}
+		}
+	}
+}
