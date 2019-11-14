@@ -1,0 +1,14 @@
+{
+	"name": "SourceDataset_rls",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "cosmos_catalog",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "CosmosDbSqlApiCollection",
+		"typeProperties": {
+			"collectionName": "movies"
+		}
+	}
+}
