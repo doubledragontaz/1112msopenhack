@@ -1,0 +1,17 @@
+{
+	"name": "DestinationDataset_rls",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DLSgen2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileSystem": "southridgevideo"
+			}
+		}
+	}
+}
