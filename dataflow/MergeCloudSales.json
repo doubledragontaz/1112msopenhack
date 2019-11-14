@@ -9,14 +9,14 @@
 						"referenceName": "Orders",
 						"type": "DatasetReference"
 					},
-					"name": "source1"
+					"name": "Orders"
 				},
 				{
 					"dataset": {
 						"referenceName": "OrderDetails",
 						"type": "DatasetReference"
 					},
-					"name": "source2"
+					"name": "OrderDetails"
 				}
 			],
 			"sinks": [
@@ -25,18 +25,18 @@
 						"referenceName": "DelimitedText2",
 						"type": "DatasetReference"
 					},
-					"name": "sink1"
+					"name": "SaveData"
 				}
 			],
 			"transformations": [
 				{
-					"name": "Join1"
+					"name": "JoinOnOrderID"
 				},
 				{
-					"name": "DerivedColumn1"
+					"name": "AddColumns"
 				}
 			],
-			"script": "\n\nsource(output(\n\t\tOrderID as string,\n\t\tCustomerID as string,\n\t\tOrderDate as date,\n\t\tShipDate as date,\n\t\tTotalCost as decimal(10,0),\n\t\tCreatedDate as date,\n\t\tUpdatedDate as date\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> source1\nsource(output(\n\t\tOrderDetailID as string,\n\t\tOrderID as string,\n\t\tMovieID as string,\n\t\tQuantity as integer,\n\t\tUnitCost as decimal(10,0),\n\t\tLineNumber as integer,\n\t\tCreatedDate as date,\n\t\tUpdatedDate as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> source2\nsource1, source2 join(source1@OrderID == source2@OrderID,\n\tjoinType:'inner',\n\tbroadcast: 'none')~> Join1\nJoin1 derive(SourceSystemID = 1,\n\t\tGlobalCustomerID = uuid()) ~> DerivedColumn1\nDerivedColumn1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tmapColumn(\n\t\tOrderID = source1@OrderID,\n\t\tCustomerID,\n\t\tOrderDate,\n\t\tShipDate,\n\t\tTotalCost,\n\t\tCreatedDate = source1@CreatedDate,\n\t\tUpdatedDate = source1@UpdatedDate,\n\t\tOrderDetailID,\n\t\tOrderDetailOrderID = source2@OrderID,\n\t\tMovieID,\n\t\tQuantity,\n\t\tUnitCost,\n\t\tLineNumber,\n\t\tOrderDetailCreatedDate = source2@CreatedDate,\n\t\tOrderDetailUpdatedDate = source2@UpdatedDate,\n\t\tSourceSystemID,\n\t\tGlobalCustomerID\n\t),\n\tpartitionBy('roundRobin', 2)) ~> sink1"
+			"script": "\n\nsource(output(\n\t\tOrderID as string,\n\t\tCustomerID as string,\n\t\tOrderDate as date,\n\t\tShipDate as date,\n\t\tTotalCost as decimal(10,0),\n\t\tCreatedDate as date,\n\t\tUpdatedDate as date\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> Orders\nsource(output(\n\t\tOrderDetailID as string,\n\t\tOrderID as string,\n\t\tMovieID as string,\n\t\tQuantity as integer,\n\t\tUnitCost as decimal(10,0),\n\t\tLineNumber as integer,\n\t\tCreatedDate as date,\n\t\tUpdatedDate as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> OrderDetails\nOrders, OrderDetails join(Orders@OrderID == OrderDetails@OrderID,\n\tjoinType:'inner',\n\tbroadcast: 'none')~> JoinOnOrderID\nJoinOnOrderID derive(SourceSystemID = 1,\n\t\tGlobalCustomerID = uuid()) ~> AddColumns\nAddColumns sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tmapColumn(\n\t\tOrderID = Orders@OrderID,\n\t\tCustomerID,\n\t\tOrderDate,\n\t\tShipDate,\n\t\tTotalCost,\n\t\tCreatedDate = Orders@CreatedDate,\n\t\tUpdatedDate = Orders@UpdatedDate,\n\t\tOrderDetailID,\n\t\tOrderDetailOrderID = OrderDetails@OrderID,\n\t\tMovieID,\n\t\tQuantity,\n\t\tUnitCost,\n\t\tLineNumber,\n\t\tOrderDetailCreatedDate = OrderDetails@CreatedDate,\n\t\tOrderDetailUpdatedDate = OrderDetails@UpdatedDate,\n\t\tSourceSystemID,\n\t\tGlobalCustomerID\n\t),\n\tpartitionBy('roundRobin', 2)) ~> SaveData"
 		}
 	}
 }
