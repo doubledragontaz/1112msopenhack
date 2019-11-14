@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "dataflow1",
+						"referenceName": "MergeCloudSales",
 						"type": "DataFlowReference"
 					}
 				}
@@ -35,7 +35,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "dataflow2",
+						"referenceName": "MergeCustomer",
 						"type": "DataFlowReference"
 					}
 				}
