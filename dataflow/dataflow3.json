@@ -8,9 +8,13 @@
 					"name": "LoadCustomerToDWH"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"name": "sink1"
+				}
+			],
 			"transformations": [],
-			"script": "\n\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false) ~> LoadCustomerToDWH"
+			"script": "\n\nsource(allowSchemaDrift: true,\n\tvalidateSchema: false) ~> LoadCustomerToDWH\nLoadCustomerToDWH sink() ~> sink1"
 		}
 	}
 }
